@@ -1,0 +1,15 @@
+---
+local:
+  hosts:
+    172.31.23.9:   # This is Ansible Control Node
+nodes:
+  hosts:
+    172.31.17.151:   # This is Node 1 on UBUNTU distribution
+    172.31.20.206:   # This is Node 2 on REDHAT distribution
+ubuntu:
+  hosts:
+    172.31.23.9:
+    172.31.17.151:
+redhat:
+  hosts:
+    172.31.20.206:

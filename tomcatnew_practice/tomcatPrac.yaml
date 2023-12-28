@@ -1,0 +1,40 @@
+---
+- name: install tomcat 10
+  become: yes
+  hosts: appserver
+  vars:
+    username: tomcat
+    groupname: tomcat
+    homedir:  /opt/tomcat
+    shell: /bin/false 
+    tomcat_major_version: 10
+    tomcat_spcific_version: 10.1.17
+    download_url:
+  tasks:
+    - name: Print purpose
+      ansible.builtin.debug:
+        var: purpose
+    - name: Fail on unsupported operating systems
+      ansible.builtin.fail:
+        msg: "This playbook will work on Debian and RedHat only"
+      when: ansible_facts["os_family"] != "Debian" and ansible_facts["os_family"] != "RedHat"
+    - name: install jdk
+      ansible.builtin.apt:
+        name: "openjdk-{{ java_version }}-jdk"
+        update_cache: yes
+        state: present 
+    - name: Ensure group "somegroup" exists
+      ansible.builtin.group:
+        name: "{{ groupname }}"
+        state: present 
+    - name: create tomcat user
+      ansible.builtin.user: 
+        name: "{{ username }}"
+        group: "{{ groupname }}"
+        home: "{{ homedir }}"
+        createhome: true
+        shell: "{{ shell }}"
+    - name: downlaod tomcat
+      ansible.builtin.get_url:
+        url: "https://dlcdn.apache.org/tomcat/tomcat-{{ tomcat_major_version }}/v{{ tomcat_spcific_version }}/bin/apache-tomcat-{{ tomcat_spcific_version }}.tar.gz"   
+        dest: "/tmp/apache-tomcat-{{ java_version }}.tar.gz"

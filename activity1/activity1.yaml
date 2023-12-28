@@ -1,0 +1,30 @@
+---
+- name: activity 1
+  become: yes
+  hosts: all
+  tasks: 
+    - name: install apache server and php package
+
+      # i can istall more application together also using this command->$ sudo apt install php libapache2-mod-php php-mysql -y
+      # (installing-> php, ->apache2, -> mysql too)
+      # ansible.builtin.apt = apt/yum its same
+      # parametersallow held packages
+      ansible.builtin.apt: 
+        name:
+          - apache2
+          - php
+          - libapache2-mod-php
+          - php-mysql
+        state: present #meaning default
+        update_cache: yes
+    - name : copy php file
+      ansible.builtin.copy:
+      src: info.php 
+      # where ever i have this file 
+      content: '<?php phpinfo();?>'
+      # file has to have this above content
+      dest : /var/www/html/info.php
+      #where do you want me to copy this/var/www/html/info.php this location
+
+
+

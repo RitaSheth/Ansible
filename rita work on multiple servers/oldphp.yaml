@@ -1,0 +1,37 @@
+---
+- name: Install Apache and PHP
+  become: yes
+  hosts: webservers
+  tasks:
+    - name: Install Apache and PHP on Debian
+      apt:
+        name:
+          - apache2
+          - php 
+          - libapache2-mod-php 
+          - php-mysql
+        update_cache: yes
+        state: present
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Install Apache and PHP on Red Hat
+      dnf:
+        name:
+          - httpd
+          - php
+          - php-cli 
+          - php-common
+        state: present
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Create info.php
+      copy:
+        content: '<?php phpinfo(); ?>'
+        dest: /var/www/html/info.php
+
+    - name: Ensure httpd is running on Red Hat
+      service:
+        name: httpd
+        enabled: yes
+        state: started
+      when: ansible_facts['os_family'] == 'RedHat'

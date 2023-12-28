@@ -1,0 +1,227 @@
+#Ways of working in ansible  
+QC-6,7
+* figure out the manual steps
+* execute and verify if they are working
+* for each manual step findout an ansible module which can help
+
+
+# yaml used to represent data it can be any data
+# yaml we are using for our design state to ansible to what we are expecting
+# to express our desire state(file)
+_________________________________________________________________________________
+command
+chmod +x test.sh  //+x (give executive permission to test.sh(to this file))
+#how to write yaml
+name : text
+email: text
+phone: text
+career objective : text
+professional summary : list (text)
+technical skills: map/dictionary (text: list (text))
+work experience list (map)
+education (map)
+
+
+---
+//this is sample yaml file
+name: "Jamesbond"      //text
+age :  "10a"           //text
+mobilenum : "72647368"   //text
+email     : "namebond@test.com"
+british :  "yes"
+carrer/objective: | ////multi lines text use greater > or |sign  //text
+include_newlines: | ////multi lines text use greater > or |sign
+            exactly as you see
+            will appear these three
+            lines of poetry
+
+fold_newlines: >  //multi lines text use greater > or |sign //text
+            this is really a, herettyuyioiopoiuoioi
+            single line of text ersdxctfyugihjokp
+            despite appearancesarezstdhkjlm;ujb nbujuhniujnkm mnbyugtyuftcgb n jkiojiojlm,m n vbc
+            fcgv hnbb nmmnmnmnmnmnmnmnmnmn
+professional summary: //multiple things i have done in organization  //list(text)
+  - involved in designing ci/cd pipelines
+  - hands on experience in developing ansible playbook
+technical skills: // map/dictionary (text:list(text)) 
+ os:
+ - windows
+ - linux
+cm:
+ - ansible
+container :
+ - Docker
+work experience : // list (map)
+ - company: xyz limited
+   duration: dec2021 -present
+   designation: devOps eng
+   randr: 
+    - ensuring pipeline are healthy
+    - developing playbook
+ - company: abc limited
+   duration: dec2010
+
+   designation: devOps eng
+   randr:
+
+---
+----------------------------------------------------------------------------------------------------- 
+Ansiblle yamal syntax :->  https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
+
+for Multi-line text in YAML use Pipe "| " or ">" greater symbole
+
+eg: 
+include_newlines: |
+            exactly as you see
+            will appear these three
+            lines of poetry
+
+fold_newlines: >
+            this is really a
+            single line of text
+            despite appearances
+
+________________________________________________________________________________________________________
+Ansible playbook yaml
+https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html
+
+# Basic structure of ansible  playbook-> playbook means yaml file
+
+below is yaml file
+``` yaml
+---
+ - name: <name of playbook -text>
+  hosts: <where to execute -text>
+  become: <need sudo permissions -boolean yes/no>
+  tasks: #<list of task>
+ - name: Ensure apache is at the latest version #name of task
+    ansible.builtin.yum:# module name
+      name: httpd # module arguments
+      state: latest # state
+
+
+```
+playbook: // ansible playbook is collection of plays->each plays collection of task->each task excuted by module
+ 1 : play : task->  name, hosts, become, collection,roles   // eg touch 1.txt= onefile i creating as task(each place collection of task)
+                                                            // each task 
+            task:-> name, module  //task is generally one linux command
+			        module-> arguments, state (put)
+					
+			task:-> 
+			task:->
+     
+ 2 : play :
+ 3:  play :
+//______________________________________________________________________________
+# lets create  a simple playbook
+ * goal : create a file @'/tmp/1.txt ' // creating file in temp folder
+ * manual way to create file 
+ ```bash
+ touch /tmp/1.txt
+ ```
+  * where to execute : all machines
+  * Approximate playbook
+
+  ``` yaml
+  ---
+   - name: create file play
+     become : false
+     hosts: all
+     tasks : 
+   - name : create file
+     ansible.builtin.file: # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html
+     path: '/temp/1.txt'
+     state: file
+     ```
+
+  ```
+#_______________________________________________________________________________________
+ #Ways of working in ansible
+# figure out the manual steps
+# execute and verify if they are working
+# for each manual step findout an ansible module which can help
+ 
+ # Ansible module
+ * this o=is the smallest unit of work in ansible
+ * module takes some input which are generally referred as parameters and it has state
+ all module :https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html
+  ansible execution approaches
+  * adhoc command : dealing with one module / its used for non repetative/ dont want to automate. thisis uses the following 
+    structure
+
+    ```
+    ansible -m "<module-name>" -a "<argument>" <where>
+
+
+  * play book : this is yaml file ,sequence of command/ itsdesigned to do repitative / or different thing, 
+  rebooting server everyday, 
+
+  #____________________________________________________________________________________________
+  ## install aapache server on node1
+  #manual steps:
+
+```
+sudo apt update
+sudo apt install apache2 -y
+```
+# finding modules
+ module : https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html
+  
+#ansible.builtin.apt module/apt is same
+
+________________________________________________________________________________________________________
+# APT meaning
+/* Apt module is used to manage packages that use the apt package manager on Debian-based Linux 
+distributions, such as Ubuntu. 
+The module allows you to perform all basic package management operations, 
+such as installing, removing, and updating the packages. */
+
+________________________________________________________________________________________________________
+#Command to Uninstall an Application
+sudo  apt purge <app name> -y
+
+
+-----------------------------------------------------------------------------------------------------
+#UBUNTU LINUX COMMAND to come out of the directory and go to the home directory use the below command
+cd ~
+and 
+Windows CMD command is 
+cd..
+________________________________________________________________________________________________________________
+# to copy file from one linux machine to another linx machine
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html
+
+-----------------------------------------------------------------------------------------------------
+#Inventories in Ansible
+* Inventory is collection of Nodes:
+* Invetories are of 2 Types:
+    Static - If you know the machines then you use the Static
+    Dynamic - If you dont know the machines then you use Dynamic
+* Inventory can be written in 2 formats:
+    ini formats
+    yaml format
+# ini format
+    ipaddress/name
+
+      [group1]
+      ipaddress/name
+      ipaddress/name
+
+      [group2]
+      ipaddress/name
+      ipaddress/name
+
+
+________________________________________________________________________________________________________
+#/ debug you can print some value /show some message/ print varable value
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/debug_module.html 
+
+_________________________________________________________________________________
+#ansible packges
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/package_module.html
+running on ubuntu : apt
+redhat :dnf
+multiple value[string1,string2,string3]/ you can use loop value btewwn 1 -10 use loop 
+run in loop and variable value
+________________________________________________________________________________________________________
+

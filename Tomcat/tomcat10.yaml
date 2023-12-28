@@ -1,0 +1,66 @@
+---
+- name: apache-tomcat-10
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create tomcat user and directory
+      ansible.builtin.user:
+        name: tomcat
+        home: /opt/tomcat
+        shell: /bin/false
+        state: present
+
+    - name: Update and install default Java
+      ansible.builtin.apt:
+        update_cache: yes
+        name: default-jdk
+        state: present
+
+    - name: Download file from a file path
+      ansible.builtin.get_url:
+        url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.17/bin/apache-tomcat-10.1.17.tar.gz
+        dest: /tmp/apache-tomcat-10.1.17.tar.gz
+
+    - name: Ensure the archive file is present on the target machine
+      ansible.builtin.stat:
+        path: /tmp/apache-tomcat-10.1.17.tar.gz
+      register: file_stat
+      delegate_to: localhost
+
+    - name: Unarchive the file
+      ansible.builtin.unarchive:
+        src: /tmp/apache-tomcat-10.1.17.tar.gz
+        dest: /opt/tomcat
+        extra_opts:
+          - --strip-components=1  
+      when: file_stat.stat.exists
+
+    - name: Change file ownership, group, and permissions
+      ansible.builtin.file:
+        path: /opt/tomcat/
+        owner: tomcat
+        group: tomcat
+        recurse: yes
+
+    - name: Service File
+      ansible.builtin.template:
+        src: tomcat.service.j2
+        dest: /etc/systemd/system/tomcat.service
+
+    - name: Daemon Reload
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: Start Service Tomcat
+      ansible.builtin.service:
+        name: tomcat
+        state: started
+        enabled: yes
+
+    - name: Check Status
+      ansible.builtin.command: systemctl status tomcat
+      register: myoutput
+
+    - name: Debug
+      ansible.builtin.debug:
+        var: myoutput.stdout_lines

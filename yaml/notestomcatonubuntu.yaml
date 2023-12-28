@@ -1,0 +1,215 @@
+# java webapplication server-which help to run java base web front/webapplication/api 
+#full name apache tomacat
+# get instance from aws 
+# PS C:\Users\sheth> cd .\Downloads\
+# PS C:\Users\sheth\Downloads> ssh -i .\ansible_rsa_key.pem ubuntu@54.244.203.52
+# https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-10-on-ubuntu-20-04
+//check on above site
+#installation on your ubuntu
+#prerequiste is java 11 and then install tomcat
+#
+//_________________________________________________________________________________
+https://tomcat.apache.org/download-10.cgi
+downlaod tomcat
+10.1.13
+tar.gz cpy this link
+
+____________________________________________________________________________________________
+#Unable to access folder sue to persmission issues
+ubuntu@ip-172-31-25-248:/tmp$ cd /opt/tomcat/
+-bash: cd: /opt/tomcat/: Permission denied
+ubuntu@ip-172-31-25-248:/tmp$ cd /opt/tomcat/
+-bash: cd: /opt/tomcat/: Permission denied
+ubuntu@ip-172-31-25-248:/tmp$ cd /opt  
+ubuntu@ip-172-31-25-248:/opt$ ls -l  # Use ls -l to see what permissions are present
+total 4
+drwxr-x--- 9 tomcat tomcat 4096 Dec 26 23:27 tomcat # This shows that read permissions are no there
+ubuntu@ip-172-31-25-248:/opt$ sudo chmod 755 tomcat  # This command will update the permissions
+# now permissions have been updated as below
+ubuntu@ip-172-31-25-248:/opt$ ls -l
+total 4
+drwxr-xr-x 9 tomcat tomcat 4096 Dec 26 23:27 tomcat
+
+you can now grant tomcat ownership over the extracted installation by running:
+sudo chown -R tomcat:tomcat /opt/tomcat/
+sudo chmod -R u+x /opt/tomcat/bin
+_________________________________________________________________________________
+
+# Creating a systemd service
+ sudo update-java-alternatives -l
+
+ sudo chmod 755 /opt/tomcat/bin/
+ cd  /opt/tomcat/bin/
+ ls
+ sudo sh startup.sh
+
+ubuntu@ip-172-31-25-248:~$ sudo nano /etc/systemd/system/tomcat.service
+ubuntu@ip-172-31-25-248:~$ sudo systemctl status tomcat.service
+○ tomcat.service - Tomcat
+     Loaded: loaded (/etc/systemd/system/tomcat.service; disabled; vendor preset: enabled)
+     Active: inactive (dead)
+ubuntu@ip-172-31-25-248:~$ sudo systemctl restart tomcat.service
+Job for tomcat.service failed because the control process exited with error code.
+See "systemctl status tomcat.service" and "journalctl -xeu tomcat.service" for details.
+ubuntu@ip-172-31-25-248:~$ sudo systemctl daemon-reload
+ubuntu@ip-172-31-25-248:~$ sudo chown -R tomcat:tomcat /opt/tomcat/
+sudo chmod -R u+x /opt/tomcat/bin
+ubuntu@ip-172-31-25-248:~$ sudo systemctl restart tomcat.service
+ubuntu@ip-172-31-25-248:~$ sudo systemctl start tomcat.service
+
+ sudo systemctl enable tomcat.service
+ http://54.244.203.52:8080/
+_________________________________________________________________________________
+// some step may be missing but manually we downloaded TOMCAT application above is all so same step
+//wget is command for downloading
+//-p redirecting to / tmp folder or redirectig to specified folder
+#create tomcat user and directory
+#sudo useradd -m -d /opt/tomcat -u -s /bin/false tomcat
+#updating & installing package 
+#sudo apt update && sudo apt install default-jdk -y
+#java -version
+# cd tmp dirtory cd /tmp
+# wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.20/bin/apache-tomcat-10.0.20.tar.gz
+#unzip tomcat files to /opt/tomcat 
+sudo tar xzvf apache-tomcat-10*tar.gz -C /opt/tomcat --strip-components=1 
+#changing the owner&group and providing execution permission
+sudo chown -R tomcat:tomcat /opt/tomcat/
+sudo chmod -R u+x /opt/tomcat/bin
+# created service file and add service file to it
+[Unit]
+Description=Tomcat
+After=network.target
+
+[Service]
+Type=forking
+
+User=tomcat
+Group=tomcat
+
+Environment="JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64"
+Environment="JAVA_OPTS=-Djava.security.egd=file:///dev/urandom"
+Environment="CATALINA_BASE=/opt/tomcat"
+Environment="CATALINA_HOME=/opt/tomcat"
+Environment="CATALINA_PID=/opt/tomcat/temp/tomcat.pid"
+Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
+
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/opt/tomcat/bin/shutdown.sh
+
+RestartSec=10
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+#demon restart
+sudo systemctl daemon-reload
+#start and enable tomcat service
+sudo systemctl start tomcat
+sudo systemctl status tomcat
+sudo systemctl enable tomcat
+
+#take the <public ip> http://<publicip>:8080
+________________________________________________________________________________________________________
+
+
+
+// now will write same thing in ansible playbook
+--- 
+  - name: apache-tomcat-10
+    hosts: all
+    become: yes
+    tasks: 
+     #sudo useradd -m -d /opt/tomcat -u -s /bin/false tomcat 
+     https://docs.ansible.com/ansible/latest/collections/ansible/builtin/user_module.html
+        - name: create tomcat user and directory
+          ansible.builtin.user:
+            name: tomcat
+            home:  /opt/tomcat
+            shell: /bin/false
+            state: present 
+      # sudo apt update && sudo apt install default -jdk -y
+        - name: update & install java default
+          ansible.builtin.apt:
+            update_cache: yes
+            name: default-jdk
+            state: present
+
+
+        - name: Download file from a file path
+          ansible.builtin.get_url:
+            url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.20/bin/apache-tomcat-10.0.20.tar.gz
+            dest: /tmp/apache-tomcat-10*tar.gz
+        
+        #sudo tar xzvf apache-tomcat-10*tar.gz -C /opt/tomcat --strip-components=1
+        - name: Unarchive a file with extra options
+          ansible.builtin.unarchive:
+            src: /tmp/apache-tomcat-10*tar.gz
+            dest: /opt/tomcat
+            extra_opts:
+            - --strip-components=1
+
+#sudo chown -R tomcat:tomcat /opt/tomcat/
+        - name: Change file ownership, group and permissions
+          ansible.builtin.file:
+          path:  /opt/tomcat/
+          owner: tomcat
+          group: tomcat
+          recurse: yes
+
+#Create Service File
+
+        - name: Service File
+          ansible.builtin.template:
+            src: tomcat.service.j2
+            dest: /etc/systemd/system/tomcat.service
+
+# Daemon Restart - sudo systemctl daemon-reload
+        - name: daemon-reload
+          ansible.builtin.systemd:
+            daemon_reload: yes
+
+        - name: Start Service Tomcat
+          ansible.builtin.service:
+            name: tomact
+            state: started
+            enabled: yes
+# Check Status
+        - name: Check Status
+          ansible.builtin.command: systemctl status tomcat
+          register: myoutput
+
+# Debug
+        - name: Debug
+          ansible.builtin.debug: 
+            var: myoutput.stdout_lines
+            
+
+
+
+
+
+________________________________________________________________________________________________________
+
+
+_________________________________________________________________________________________________
+Activity install tomcat
+refer : https://tecadmin.net/how-to-install-tomcat-on-ubuntu-22-04/
+
+sudo useradd -r -m -U -d /opt/tomcat -s /bin/false tomcat -> 
+from powershell
+#username=tomcat
+#group=tomcat
+#homedir= /opt/tomcat
+#shell= /bin/false
+#create user with following information
+
+_________________________________________________________________________________
+#check this site//https://linuxize.com/post/how-to-install-tomcat-10-on-ubuntu-22-04/
+#to download tomcat zip file// wget using for downlaod//-p tmp-> means in tmp file download
+ MAJOR_VERSION="10"
+VERSION="10.1.17"
+wget "https://dlcdn.apache.org/tomcat/tomcat-${MAJOR_VERSION}/v${VERSION}/bin/apache-tomcat-${VERSION}.tar.gz" -P/tmp
+
+_________________________________________________________________________________
+#to check this on powershell write  tar --help(it will tell you the meaning of -xf,-c)
+sudo tar -xf /tmp/apache-tomcat-${VERSION}.tar.gz -C /opt/tomcat/
