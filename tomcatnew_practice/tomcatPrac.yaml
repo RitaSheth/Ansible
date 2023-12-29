@@ -69,13 +69,3 @@
          group: "{{ groupname }}"
          mode: "0751"
       loop: "{{ shell_files.stdout_lines }}"  
-    - name: Start Service Tomcat
-      ansible.builtin.service:
-         name: tomcat
-         state: started
-         enabled: yes
-      become: yes
-      tags: tomcat
-    - name: Check Status
-      ansible.builtin.command: systemctl status tomcat
-      register: myoutput   
