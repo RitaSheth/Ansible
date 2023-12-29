@@ -56,10 +56,9 @@
         recurse: yes
         owner: "{{ username }}"
         group: "{{ groupname }}"
-
     - name : get all the shell files
-      ansible.builtin.command: sudo ls /opt/tomcat/latest/bin/*.sh'
+      ansible.builtin.command: sudo ls /opt/tomcat/latest/bin/*.sh
       register: shell_files
-    -  name: print the value
-       ansible.builtin.debug:
+    - name: print the value
+      ansible.builtin.debug:
          var: shell_files
