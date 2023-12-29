@@ -81,6 +81,8 @@
       ansible.builtin.template:
          src: templates/tomcat.j2
          dest: "{{ service_file_path }}"
+      notify:
+        - restart tomcat   
       when: ansible_facts["os_family"] == "Debian"   
     - name: reload daemon, enable and start tomcat
       ansible.builtin.systemd:
@@ -89,3 +91,10 @@
          enabled: yes
          state: started
       when: ansible_facts["os_family"] == "Debian"
+  handlers:    
+    - name: restart tomcat
+      ansible.built.in.systemd:
+        name: tomcat
+        daemon_reload:true
+        enabled: true
+        state: restarted 
