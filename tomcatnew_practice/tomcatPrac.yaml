@@ -70,8 +70,8 @@
          mode: "0751"
       loop: "{{ shell_files.stdout_lines }}"  
     - name: Start Service Tomcat
-      ansible.builtin.service:
-         name: "{{ username }}"
+      ansible.builtin.systemmd:
+         name: tomcat
          state: started
          enabled: yes
     - name: Check Status
