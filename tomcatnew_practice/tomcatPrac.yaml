@@ -79,7 +79,7 @@
       loop: "{{ shell_files.stdout_lines }}"  
     - name: copy tomcat service files
       ansible.builtin.template:
-         src: templates/tomcat_ubuntu.j2
+         src: templates/tomcat.j2
          dest: "{{ service_file_path }}"
       when: ansible_facts["os_family"] == "Debian"   
     - name: reload daemon, enable and start tomcat
