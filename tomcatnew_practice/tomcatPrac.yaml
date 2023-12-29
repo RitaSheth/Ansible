@@ -64,16 +64,16 @@
          var: shell_files
     - name: add execute permission
       ansible.builtin.file:
-        path: "{{ item }}"
-        owner: "{{ username }}"
-        group: "{{ groupname }}"
-        mode: "0751"
+         path: "{{ item }}"
+         owner: "{{ username }}"
+         group: "{{ groupname }}"
+         mode: "0751"
       loop: "{{ shell_files.stdout_lines }}"  
     - name: Start Service Tomcat
       ansible.builtin.service:
-        name: "{{ username }}"
-        state: started
-        enabled: yes
+         name: "{{ username }}"
+         state: started
+         enabled: yes
     - name: Check Status
       ansible.builtin.command: systemctl status tomcat
       register: myoutput   
