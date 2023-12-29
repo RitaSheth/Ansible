@@ -82,11 +82,6 @@
          src: templates/tomcat_ubuntu.j2
          dest: "{{ service_file_path }}"
       when: ansible_facts["os_family"] == "Debian"   
-
-    - name: Debug Java and Tomcat Paths
-      ansible.builtin.debug:
-         msg: "Java Path: {{ ansible_env.JAVA_HOME }}, Tomcat Path: {{ homedir }}/latest/bin"
-
     - name: reload daemon, enable and start tomcat
       ansible.builtin.systemd:
          name: tomcat
