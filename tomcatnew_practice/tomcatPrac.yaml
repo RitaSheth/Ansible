@@ -59,7 +59,7 @@
 
     - name : get all the shell files
       ansible.builtin.command: sudo ls /opt/tomcat/latest/bin/*.sh'
-        register: shell_files
+      register: shell_files
     -  name: print the value
        ansible.builtin.debug:
          var: shell_files
