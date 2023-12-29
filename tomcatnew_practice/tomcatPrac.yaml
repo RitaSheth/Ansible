@@ -9,7 +9,9 @@
     shell: /bin/false 
     tomcat_major_version: 10
     tomcat_spcific_version: 10.1.17
-    download_url:
+    java_version: "11"
+    service_file_path: "etc/systemd/system/tomcat.service"
+    
   tasks:
     - name: Print purpose
       ansible.builtin.debug:
@@ -23,6 +25,12 @@
         name: "openjdk-{{ java_version }}-jdk"
         update_cache: yes
         state: present 
+      when: ansible_facts["os_family"] == "Debian"
+    - name: install jdk
+      ansible.builtin.yum:
+        name: "java-{{ java_version }}-openjdk"
+        state: present 
+      when: ansible_facts["os_family"] == "RedHat"
     - name: Ensure group "tomcat" exists
       ansible.builtin.group:
         name: "{{ groupname }}"
@@ -69,3 +77,15 @@
          group: "{{ groupname }}"
          mode: "0751"
       loop: "{{ shell_files.stdout_lines }}"  
+    - name: copy tomcat service files
+      ansible.builtin.template:
+         src: templates/tomcat_ubuntu.j2
+         dest: "{{ service_file_path }}"
+      when: ansible_facts["os_family"] == "Debian"   
+    - name: reload daemon, enable and start tomcat
+      ansible.builtin.systemd
+         name: tomcat
+         daemon_reload: true
+         enabled: true
+         state: started
+      when: ansible_facts["os_family"] == "Debian"
