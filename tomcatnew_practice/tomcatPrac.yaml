@@ -71,7 +71,7 @@
       loop: "{{ shell_files.stdout_lines }}"  
     - name: Start Service Tomcat
       ansible.builtin.service:
-        name: tomcat
+        name: "{{ username }}"
         state: started
         enabled: yes
     - name: Check Status
