@@ -106,9 +106,9 @@
         -  "{{ home dir }}/tomcat/latest/webapps/manager/META-INF/context.xml"
         -  "{{ home dir }}/tomcat/latest/webapps/host-manager/META-INF/context.xml"
       notify:
-        - restart tomcat 
+        - restart tomcat      
              
-      - name: ensure tomcat is running
+    - name: ensure tomcat is running
       ansible.builtin.systemd:
          name: tomcat
          daemon_reload: true
