@@ -93,7 +93,7 @@
     - name: copy users xml
       ansible.builtin.template:
         src: templates/tomcat-users.xml.j2
-        dest: "{{ homedir }}/tomcat/latest/conf/tomcat-users.xml"   
+        dest: "{{ homedir }}/latest/conf/tomcat-users.xml"   
         owner: "{{ username }}"
         group: "{{ groupname }}"
       notify:
@@ -103,8 +103,8 @@
         src: templates/context.xml.j2
         dest: "{{ item }} "
       with_items:
-        -  "{{ home dir }}/tomcat/latest/webapps/manager/META-INF/context.xml"
-        -  "{{ home dir }}/tomcat/latest/webapps/host-manager/META-INF/context.xml"
+        -  "{{ homedir }}/latest/webapps/manager/META-INF/context.xml"
+        -  "{{ homedir }}/latest/webapps/host-manager/META-INF/context.xml"
       notify:
         - restart tomcat      
              
