@@ -55,9 +55,7 @@
       notify:
         - Create a symbolic link
     - name: run all the handlers
-      ansible.builtin.meta: flush_handlers
-
-    
+      ansible.builtin.meta: flush_handlers  
 
     - name: Recursively change ownership of a directory
       ansible.builtin.file:
