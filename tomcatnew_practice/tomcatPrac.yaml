@@ -12,7 +12,7 @@
     java_version: "11"
     service_file_path: "/etc/systemd/system/tomcat.service"
     tomcat_admin_username: admin
-    tomcat_admin_password: admin@123
+    tomcat_admin_password: s3cret
     allowed_ip_range: ".*"
   tasks:
     - name: Print purpose
@@ -99,7 +99,7 @@
     - name: copy context.xml
       ansible.builtin.template:
         src: templates/context.xml.j2
-        dest: "{{ item }} "
+        dest: "{{ item }}"
       with_items:
         -  "{{ homedir }}/latest/webapps/manager/META-INF/context.xml"
         -  "{{ homedir }}/latest/webapps/host-manager/META-INF/context.xml"
