@@ -54,14 +54,8 @@
         - Create a symbolic link
     - name: run all the handlers
       ansible.builtin.meta: flush_handlers
-         
-    - name: Create a symbolic link 
-      ansible.builtin.file:
-        src: "{{ homedir }}/apache-tomcat-{{ tomcat_spcific_version }}"
-        dest: "{{ homedir }}/latest"
-        owner: "{{ username }}"
-        group: "{{ groupname }}"
-        state: link
+
+    
 
     - name: Recursively change ownership of a directory
       ansible.builtin.file:
