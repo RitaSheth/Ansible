@@ -1,7 +1,6 @@
 appserver:
   hosts:
     172.31.17.151:
-      java_version: "11"
     172.31.22.141:
-      java_version: "11"    
+        
 
