@@ -213,3 +213,25 @@ wget "https://dlcdn.apache.org/tomcat/tomcat-${MAJOR_VERSION}/v${VERSION}/bin/ap
 _________________________________________________________________________________
 #to check this on powershell write  tar --help(it will tell you the meaning of -xf,-c)
 sudo tar -xf /tmp/apache-tomcat-${VERSION}.tar.gz -C /opt/tomcat/
+
+#sudo diff by using this command you can check what is difference between two file, and if you dont
+get anything means there is no different
+ eg: 
+ubuntu@ip-172-31-22-141:~$ sudo diff /opt/tomcat/latest/webapps/manager/META-INF/context.xml 
+/opt/tomcat/latest/webapps/host-manager/META-INF/context.xml
+
+_________________________________________________________________________________
+#tags
+tags means what is content behind that job, if i want to do selective/perticular some task only execution then 
+tag will use. the purpose of tags is run specific tasks or skip specific tasks 
+
+eg:1: ansible-playbook -i hosts -t java tomcatPrac.yaml //means in tomcatPrac.yaml file has tag t-java tag only run not any other tag
+2:$ansible-playbook -i hosts --skip-tags java tomcatPrac.yaml // in tomcatPrac.yaml file has tag: java
+so skip that java tag and run all other task bcz i used in above line skip- tags java
+_________________________________________________________________________________________________
+#reusability in ansible
+using ansible we can reuse the playbook in 3 Ways
+1: import or include playbook
+2: roles
+3:collections
+________________________________________________________________________
