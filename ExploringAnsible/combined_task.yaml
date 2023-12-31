@@ -1,6 +1,6 @@
 ---
 - name: call tasks
-  become: not
+  become: no
   gather_facts: no
   hosts: all
   tasks:
