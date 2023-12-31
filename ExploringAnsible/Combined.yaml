@@ -1,8 +1,4 @@
 ---
- - name: Combined
-   become: no
-   gather_facts: no
-   hosts: all
    - name: call First
      ansible.builtin.import_playbook: First.yaml
    - name: call Second
