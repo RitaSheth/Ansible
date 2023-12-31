@@ -1,0 +1,9 @@
+---
+ - name: second
+   become: no
+   geather_facts: no
+   hosts: all
+   tasks:
+     - name: print message
+       ansible.builtin.debug:
+         msg: "this is second"
