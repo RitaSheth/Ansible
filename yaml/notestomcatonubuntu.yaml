@@ -7,7 +7,7 @@
 //check on above site
 #installation on your ubuntu
 #prerequiste is java 11 and then install tomcat
-#
+# use SHIFT+TAB to indent LEFT
 //_________________________________________________________________________________
 https://tomcat.apache.org/download-10.cgi
 downlaod tomcat
@@ -235,8 +235,22 @@ using ansible we can reuse the playbook in 3 Ways
 2: roles
 3:collections
 ________________________________________________________________________
-# import playbook is collection of play
+# import playbook is collection of play/ import is static
 to execute first & second file together in my vc #folder ExploringAnsible ->
 first & second yaml file &Combined.yaml both file called in 3rd file (Combined.yaml) 
 
+# Include and Import modules 
+Include - Dynamic 
+          you can do task conditions
+Import -  Static 
+          it is always unconditional
 
+_________________________________________________________________________________
+
+# Ansible Roles
+
+Roles provides reusability. It allows us to call a code someone else has written for us to use.
+
+eg: Someone has wirtten a role to install Java, all that we need to do is call that which is called as ROLES 
+I have  written a code to Install TOMCAT on a server. If Nabin wants to use install Tomcat on any server 
+all that he needs to do is write a Role to call my code which is available in the repository/cloud.  
