@@ -203,15 +203,15 @@ from powershell
 #shell= /bin/false
 #create user with following information
 
-_________________________________________________________________________________
-#check this site//https://linuxize.com/post/how-to-install-tomcat-10-on-ubuntu-22-04/
+_______________________________________________________________________________________________
+#check this site//https://linuxize.com/post/how-to-install-tomcat-10-on-ubuntu-22-04/  QC13
 #to download tomcat zip file// wget using for downlaod//-p tmp-> means in tmp file download
  MAJOR_VERSION="10"
 VERSION="10.1.17"
 wget "https://dlcdn.apache.org/tomcat/tomcat-${MAJOR_VERSION}/v${VERSION}/bin/apache-tomcat-${VERSION}.tar.gz" -P/tmp
 
 _________________________________________________________________________________
-#to check this on powershell write  tar --help(it will tell you the meaning of -xf,-c)
+#to check this on powershell write  tar --help(it will tell you the meaning of -xf,-c)  QC13
 sudo tar -xf /tmp/apache-tomcat-${VERSION}.tar.gz -C /opt/tomcat/
 
 #sudo diff by using this command you can check what is difference between two file, and if you dont
@@ -221,7 +221,7 @@ ubuntu@ip-172-31-22-141:~$ sudo diff /opt/tomcat/latest/webapps/manager/META-INF
 /opt/tomcat/latest/webapps/host-manager/META-INF/context.xml
 
 _________________________________________________________________________________
-#tags
+#tags Qc13
 tags means what is content behind that job, if i want to do selective/perticular some task only execution then 
 tag will use. the purpose of tags is run specific tasks or skip specific tasks 
 
@@ -229,9 +229,14 @@ eg:1: ansible-playbook -i hosts -t java tomcatPrac.yaml //means in tomcatPrac.ya
 2:$ansible-playbook -i hosts --skip-tags java tomcatPrac.yaml // in tomcatPrac.yaml file has tag: java
 so skip that java tag and run all other task bcz i used in above line skip- tags java
 _________________________________________________________________________________________________
-#reusability in ansible
+#reusability in ansible QC 13
 using ansible we can reuse the playbook in 3 Ways
 1: import or include playbook
 2: roles
 3:collections
 ________________________________________________________________________
+# import playbook is collection of play
+to execute first & second file together in my vc #folder ExploringAnsible ->
+first & second yaml file &Combined.yaml both file called in 3rd file (Combined.yaml) 
+
+
