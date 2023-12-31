@@ -1,0 +1,8 @@
+---
+- name: Import tasks
+  become: no
+  gather_facts: no
+  hosts: all
+  tasks:
+    - ansible.builtin.include_tasks: first_newtask.yaml
+    - ansible.builtin.include_tasks: Second_task.yaml

@@ -1,4 +1,0 @@
----
-  - name: print message
-    ansible.builtin.debug: 
-      msg: "this is first"
