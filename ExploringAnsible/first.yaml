@@ -1,7 +1,7 @@
 ---
  - name: second
    become: no
-   geather_facts: no
+   gather_facts: no
    hosts: all
    tasks:
      - name: print message
