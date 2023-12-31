@@ -6,4 +6,4 @@
    tasks:
      - name: print message
        ansible.builtin.debug:
-         msg: "this is second"ns
+         msg: "this is second"
